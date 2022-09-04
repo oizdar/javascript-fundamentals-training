@@ -26,7 +26,9 @@
                         <td>{{ repLog.reps }}</td>
                         <td>{{ repLog.totalWeightLifted }}</td>
                         <td>
-                            &nbsp;<a href="#" class="js-delete-rep-log" data-url="{{ path('rep_log_delete', {id: repLog.id}) }}"><span class="fa fa-trash"></span></a>
+                            &nbsp;<a href="#" class="js-delete-rep-log"
+                                     data-url="{{ path('rep_log_delete', {id: repLog.id}) }}"><span
+                                        class="fa fa-trash"></span></a>
                         </td>
                     </tr>
                 {% else %}
@@ -36,12 +38,12 @@
                 {% endfor %}
                 </tbody>
                 <tfoot>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <th>Total</th>
-                        <th class="js-total-weight">{{ totalWeight }}</th>
-                        <td>&nbsp;</td>
-                    </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <th>Total</th>
+                    <th class="js-total-weight">{{ totalWeight }}</th>
+                    <td>&nbsp;</td>
+                </tr>
                 </tfoot>
             </table>
 
@@ -51,7 +53,7 @@
         <div class="col-md-5">
             <div class="leaderboard">
                 <h2 class="text-center">
-                    <img class="dumbbell" src="{{ asset('assets/images/dumbbell.png') }}" />
+                    <img class="dumbbell" src="{{ asset('assets/images/dumbbell.png') }}"/>
                     Leaderboard
                 </h2>
 
@@ -65,11 +67,21 @@
     {{ parent() }}
 
     <script>
-        $(document).ready(() => {
-            let $table = $('.js-rep-log-table');
+        var RepLogApp = {
+            initialize: function ($wrapper) {
+                this.$wrapper = $wrapper;
 
-            $table.find('.js-delete-rep-log').on('click', function(e) {
-                'use strict';
+                this.$wrapper.find('.js-delete-rep-log').on(
+                    'click',
+                    this.handleRepLogDelete
+                );
+
+                this.$wrapper.find('tbody tr').on(
+                    'click',
+                    this.handleRowClick
+                )
+            },
+            handleRepLogDelete: function (e) {
                 e.preventDefault()
                 $(this).addClass('text-danger')
                 $(this).find('.fa')
@@ -78,21 +90,34 @@
                     .addClass('fa-spin')
                 let deleteUrl = $(this).data('url');
                 let $row = $(this).closest('tr')
-                let $totalWeightContainer = $table.find('.js-total-weight')
-                let newWeight = $totalWeightContainer.html() - $row.data('weight')
                 $.ajax({
                     url: deleteUrl,
                     method: 'DELETE',
                     success: function () {
-                        $row.fadeOut();
-                        $totalWeightContainer.html(newWeight)
+                        $row.fadeOut('normal', function () {
+                            $row.remove()
+                            RepLogApp.updateTotalWeightLifted()
+                        });
                     }
                 })
-            });
+            },
+            updateTotalWeightLifted: function () {
+                let totalWeight = 0;
+                this.$wrapper.find('tbody tr').each(function () {
+                    totalWeight += $(this).data('weight');
+                });
 
-            $table.find('tbody tr').on('click', function() {
+                this.$wrapper.find('.js-total-weight').html(totalWeight)
+            },
+            handleRowClick: function () {
                 console.log('row clicked');
-            });
+            }
+        };
+
+        $(document).ready(() => {
+            let $table = $('.js-rep-log-table');
+
+            RepLogApp.initialize($table)
         })
     </script>
 {% endblock %}
