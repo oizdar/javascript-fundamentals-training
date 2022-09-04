@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+###> doctrine/doctrine-bundle ###
+  database:
+    image: mariadb:10.9
+    environment:
+      MARIADB_ROOT_PASSWORD: root_pswrd
+      MARIADB_DATABASE: app
+    volumes:
+       - ./docker/db/data:/var/lib/mysql:rw
+    ports:
+      - '3306:3306'
