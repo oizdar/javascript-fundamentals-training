@@ -7,6 +7,8 @@ services:
     environment:
       MARIADB_ROOT_PASSWORD: root_pswrd
       MARIADB_DATABASE: app
+      MARIADB_USER: symfony
+      MARIADB_PASSWORD: ChangeMe
     volumes:
        - ./docker/db/data:/var/lib/mysql:rw
     ports:
