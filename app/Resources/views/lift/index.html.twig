@@ -73,30 +73,33 @@
 
                 this.$wrapper.find('.js-delete-rep-log').on(
                     'click',
-                    this.handleRepLogDelete
+                    this.handleRepLogDelete.bind(this)
                 );
 
                 this.$wrapper.find('tbody tr').on(
                     'click',
-                    this.handleRowClick
+                    this.handleRowClick.bind(this)
                 )
             },
             handleRepLogDelete: function (e) {
                 e.preventDefault()
-                $(this).addClass('text-danger')
-                $(this).find('.fa')
+                let $link = $(e.currentTarget);
+                $link.addClass('text-danger')
+                $link.find('.fa')
                     .removeClass('fa-trash')
                     .addClass('fa-spinner')
                     .addClass('fa-spin')
-                let deleteUrl = $(this).data('url');
-                let $row = $(this).closest('tr')
+                let deleteUrl = $link.data('url');
+                let $row = $link.closest('tr')
+                let self = this;
                 $.ajax({
                     url: deleteUrl,
                     method: 'DELETE',
                     success: function () {
                         $row.fadeOut('normal', function () {
-                            $row.remove()
-                            RepLogApp.updateTotalWeightLifted()
+                            $(this).remove()
+                            console.log(self)
+                            self.updateTotalWeightLifted()
                         });
                     }
                 })
