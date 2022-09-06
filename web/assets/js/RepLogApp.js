@@ -138,11 +138,21 @@
         },
 
         _saveRepLog: function (data) {
-            return $.ajax({
-                url: Routing.generate('rep_log_new'),
-                method: 'POST',
-                data: JSON.stringify(data),
-            })
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    url: Routing.generate('rep_log_new'),
+                    method: 'POST',
+                    data: JSON.stringify(data),
+                }).then(function (data, textStatus, jqXHR) {
+                    $.ajax({
+                        url: jqXHR.getResponseHeader('location')
+                    }).then(function (data) {
+                        resolve(data)
+                    });
+                }).catch(function (jqXHR) {
+                    reject(jqXHR)
+                })
+            });
         },
     })
 
