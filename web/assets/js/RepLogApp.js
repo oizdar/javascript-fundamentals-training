@@ -1,6 +1,6 @@
 'use strict';
 
-(function(window, $, Routing) {
+(function(window, $, Routing, Swal) {
     window.RepLogApp = function ($wrapper) {
         this.$wrapper = $wrapper;
         this.helper = new Helper($wrapper)
@@ -45,6 +45,27 @@
         handleRepLogDelete: function (e) {
             e.preventDefault()
             let $link = $(e.currentTarget);
+            let self = this
+            Swal.fire({
+                title: 'Delete this log?',
+                text: "What? Did you not actually lift this?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+                showLoaderOnConfirm: true,
+                preConfirm: function () {
+                    return self._deleteRepLog($link)
+                }
+            }).then((result) => {
+                if (result.isDismissed) {
+                    console.log('canceled', result.dismiss)
+                }
+            })
+        },
+
+        _deleteRepLog: function($link) {
             $link.addClass('text-danger')
             $link.find('.fa')
                 .removeClass('fa-trash')
@@ -53,7 +74,7 @@
             let deleteUrl = $link.data('url');
             let $row = $link.closest('tr')
             let self = this;
-            $.ajax({
+            return $.ajax({
                 url: deleteUrl,
                 method: 'DELETE',
             }).then(function () {
@@ -174,6 +195,6 @@
         }
     });
 
-})(window, jQuery, Routing);
+})(window, jQuery, Routing, Swal);
 
 
