@@ -121,7 +121,14 @@
         },
 
         _addRow: function (repLog) {
+            let tplText = $('#js-rep-log-row-template').html()
+            let tpl = _.template(tplText)
+            let html = tpl(repLog)
 
+            this.$wrapper.find('tbody')
+                .append($.parseHTML(html))
+
+            this.updateTotalWeightLifted()
         }
     })
 
