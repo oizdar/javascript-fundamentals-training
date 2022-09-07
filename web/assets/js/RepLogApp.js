@@ -143,9 +143,8 @@
         }
 
         _addRow(repLog) {
-            const tplText = $('#js-rep-log-row-template').html()
-            const tpl = _.template(tplText)
-            const html = tpl(repLog)
+
+            const html = rowTemplate(repLog)
 
             this.$wrapper.find('tbody')
                 .append($.parseHTML(html))
@@ -203,6 +202,20 @@
             return totalWeight;
         }
     }
+
+
+    const rowTemplate = (repLog) => `
+        <tr data-weight="${repLog.totalWeightLifted}">
+            <td>${repLog.itemLabel}</td>
+            <td>${repLog.reps}</td>
+            <td>${repLog.totalWeightLifted}</td>
+            <td>
+                &nbsp;<a href="#" class="js-delete-rep-log"
+                         data-url="${repLog.links._self}"><span
+                            class="fa fa-trash"></span></a>
+            </td>
+        </tr>
+    `
 
     window.RepLogApp = RepLogApp
 })(window, jQuery, Routing, Swal);
