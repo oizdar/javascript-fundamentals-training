@@ -32,12 +32,11 @@
         },
 
         loadRepLogs: function () {
-            let self = this
             $.ajax({
                 url: Routing.generate('rep_log_list'),
-            }).then(function (data) {
-                $.each(data.items, function(key, repLog) {
-                    self._addRow(repLog)
+            }).then((data) => {
+                $.each(data.items, (key, repLog) => {
+                    this._addRow(repLog)
                 });
             });
         },
@@ -45,7 +44,6 @@
         handleRepLogDelete: function (e) {
             e.preventDefault()
             let $link = $(e.currentTarget);
-            let self = this
             Swal.fire({
                 title: 'Delete this log?',
                 text: "What? Did you not actually lift this?",
@@ -55,9 +53,7 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!',
                 showLoaderOnConfirm: true,
-                preConfirm: function () {
-                    return self._deleteRepLog($link)
-                }
+                preConfirm: () => this._deleteRepLog($link)
             }).then((result) => {
                 if (result.isDismissed) {
                     console.log('canceled', result.dismiss)
@@ -73,14 +69,13 @@
                 .addClass('fa-spin')
             let deleteUrl = $link.data('url');
             let $row = $link.closest('tr')
-            let self = this;
             return $.ajax({
                 url: deleteUrl,
                 method: 'DELETE',
-            }).then(function () {
-                $row.fadeOut('normal', function () {
-                    $(this).remove()
-                    self.updateTotalWeightLifted()
+            }).then(() => {
+                $row.fadeOut('normal', () => {
+                    $row.remove()
+                    this.updateTotalWeightLifted()
                 });
             })
         },
@@ -100,17 +95,16 @@
 
             let $form = $(e.currentTarget);
             let formData = {};
-            let self = this;
-            $.each($form.serializeArray(), function (key, fieldData) {
+            $.each($form.serializeArray(), (key, fieldData) => {
                 formData[fieldData.name] = fieldData.value;
             })
 
             this._saveRepLog(formData)
-                .then(function (data) {
-                    self._clearForm()
-                    self._addRow(data)
-                }).catch(function (errorData) {
-                    self._mapErrorsToForm(errorData.errors)
+                .then((data) => {
+                    this._clearForm()
+                    this._addRow(data)
+                }).catch((errorData) => {
+                    this._mapErrorsToForm(errorData.errors)
                 });
         },
 
@@ -118,9 +112,9 @@
             let $form = this.$wrapper.find(this._selectors.newRepForm);
             this._removeFormErrors();
 
-            $form.find(':input').each(function () {
-                let fieldName = $(this).attr('name');
-                let $wrapper = $(this).closest('.form-group');
+            $form.find(':input').each((index, element) => {
+                let fieldName = $(element).attr('name');
+                let $wrapper = $(element).closest('.form-group');
                 if(!errorData[fieldName]) {
                     // no error!
                     return;
@@ -187,8 +181,8 @@
     $.extend(Helper.prototype, {
         calculateTotalWeight: function () {
             let totalWeight = 0;
-            this.$wrapper.find('tbody tr').each(function () {
-                totalWeight += $(this).data('weight');
+            this.$wrapper.find('tbody tr').each((index, element) => {
+                totalWeight += $(element).data('weight');
             });
 
             return totalWeight;
