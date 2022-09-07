@@ -43,7 +43,7 @@
 
         handleRepLogDelete: function (e) {
             e.preventDefault()
-            let $link = $(e.currentTarget);
+            const $link = $(e.currentTarget);
             Swal.fire({
                 title: 'Delete this log?',
                 text: "What? Did you not actually lift this?",
@@ -67,8 +67,8 @@
                 .removeClass('fa-trash')
                 .addClass('fa-spinner')
                 .addClass('fa-spin')
-            let deleteUrl = $link.data('url');
-            let $row = $link.closest('tr')
+            const deleteUrl = $link.data('url');
+            const $row = $link.closest('tr')
             return $.ajax({
                 url: deleteUrl,
                 method: 'DELETE',
@@ -93,8 +93,8 @@
         handleNewFormSubmit: function (e) {
             e.preventDefault();
 
-            let $form = $(e.currentTarget);
-            let formData = {};
+            const $form = $(e.currentTarget);
+            const formData = {};
             $.each($form.serializeArray(), (key, fieldData) => {
                 formData[fieldData.name] = fieldData.value;
             })
@@ -109,18 +109,18 @@
         },
 
         _mapErrorsToForm: function (errorData) {
-            let $form = this.$wrapper.find(this._selectors.newRepForm);
+            const $form = this.$wrapper.find(this._selectors.newRepForm);
             this._removeFormErrors();
 
             $form.find(':input').each((index, element) => {
-                let fieldName = $(element).attr('name');
-                let $wrapper = $(element).closest('.form-group');
+                const fieldName = $(element).attr('name');
+                const $wrapper = $(element).closest('.form-group');
                 if(!errorData[fieldName]) {
                     // no error!
                     return;
                 }
 
-                let $error = $('<span class="js-field-error help-block"></span>');
+                const $error = $('<span class="js-field-error help-block"></span>');
                 $error.html(errorData[fieldName]);
                 $wrapper.append($error)
                 $wrapper.addClass('has-error');
@@ -128,7 +128,7 @@
         },
 
         _removeFormErrors: function () {
-            let $form = this.$wrapper.find(this._selectors.newRepForm);
+            const $form = this.$wrapper.find(this._selectors.newRepForm);
             $form.find('.js-field-error').remove()
             $form.find('.form-group').removeClass('has-error')
         },
@@ -136,14 +136,14 @@
         _clearForm: function () {
             this._removeFormErrors()
 
-            let $form = this.$wrapper.find(this._selectors.newRepForm);
+            const $form = this.$wrapper.find(this._selectors.newRepForm);
             $form[0].reset();
         },
 
         _addRow: function (repLog) {
-            let tplText = $('#js-rep-log-row-template').html()
-            let tpl = _.template(tplText)
-            let html = tpl(repLog)
+            const tplText = $('#js-rep-log-row-template').html()
+            const tpl = _.template(tplText)
+            const html = tpl(repLog)
 
             this.$wrapper.find('tbody')
                 .append($.parseHTML(html))
@@ -164,7 +164,7 @@
                         resolve(data)
                     });
                 }).catch(function (jqXHR) {
-                    let errorData = JSON.parse(jqXHR.responseText)
+                    const errorData = JSON.parse(jqXHR.responseText)
                     reject(errorData)
                 })
             });
@@ -174,7 +174,7 @@
     /**
      * A "private" object
      */
-    let Helper = function ($wrapper) {
+    const Helper = function ($wrapper) {
         this.$wrapper = $wrapper;
     };
 
