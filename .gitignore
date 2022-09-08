@@ -15,4 +15,5 @@
 /vendor/
 /web/bundles/
 /docker
-.idea/
+/.idea/
+/node_modules/
