@@ -7,7 +7,8 @@
 
         constructor($wrapper) {
             this.$wrapper = $wrapper;
-            HelperInstances.set(this, new Helper($wrapper))
+            this.repLogs = [];
+            HelperInstances.set(this, new Helper(this.repLogs))
 
             this.loadRepLogs();
 
@@ -79,6 +80,10 @@
                 method: 'DELETE',
             }).then(() => {
                 $row.fadeOut('normal', () => {
+                    this.repLogs.splice(
+                        $row.data('key'),
+                        1
+                    );
                     $row.remove()
                     this.updateTotalWeightLifted()
                 });
@@ -146,12 +151,12 @@
         }
 
         _addRow(repLog) {
-
-            const html = rowTemplate(repLog)
-
+            this.repLogs.push(repLog);
+            const html = rowTemplate(repLog);
+            const $row = $($.parseHTML(html));
+            $row.data('key', this.repLogs.length - 1)
             this.$wrapper.find('tbody')
-                .append($.parseHTML(html))
-
+                .append($row)
             this.updateTotalWeightLifted()
         }
 
@@ -180,12 +185,12 @@
      * A "private" object
      */
     class Helper {
-        constructor($wrapper) {
-            this.$wrapper = $wrapper;
+        constructor(repLogs) {
+            this.repLogs = repLogs;
         }
 
         calculateTotalWeight() {
-            return Helper._calculateWeight(this.$wrapper.find('tbody tr'))
+            return Helper._calculateWeight(this.repLogs)
         }
 
         getTotalWeightString(maxWeight = 500) {
@@ -196,10 +201,10 @@
             return weight + ' lbs'
         }
 
-        static _calculateWeight($elements) {
+        static _calculateWeight(repLogs) {
             let totalWeight = 0;
-            for (let element of $elements) {
-                totalWeight += $(element).data('weight');
+            for (let repLog of repLogs) {
+                totalWeight += repLog.totalWeightLifted;
             }
 
             return totalWeight;
