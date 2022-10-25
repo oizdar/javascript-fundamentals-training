@@ -1,9 +1,12 @@
 const path = require('path');
 
 module.exports = {
-    entry: './web/assets/js/rep_log.js',
+    entry: {
+        rep_log: './web/assets/js/rep_log.js',
+        login: './web/assets/js/login.js'
+    },
     output: {
         path: path.resolve(__dirname, 'web', 'build'),
-        filename: "rep_log.js",
+        filename: "[name].js",
     }
 }
