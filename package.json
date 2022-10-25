@@ -6,6 +6,8 @@
   "author": "Radosław Malinowski <malinowski.rad@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "jquery": "^3.6.1",
+    "sweetalert2": "^11.6.2",
     "webpack": "3"
   }
 }
