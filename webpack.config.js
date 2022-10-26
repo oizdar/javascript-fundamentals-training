@@ -11,6 +11,20 @@ module.exports = {
         path: path.resolve(__dirname, 'web', 'build'),
         filename: "[name].js",
     },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        cacheDirectory: true,
+                    }
+                }
+            }
+        ]
+    },
     plugins: [
         new webpack.ProvidePlugin({
             jQuery: 'jquery',
